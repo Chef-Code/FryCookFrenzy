@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EF6OracleDB.Models.DbEntities.Recipe>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MenuItemID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CookStatID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipeSteps)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MenuItemID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CookStatID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipeSteps)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.RecipeID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.RecipeID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.RecipeID })
+        </td>
+    </tr>
+}
+
+</table>
