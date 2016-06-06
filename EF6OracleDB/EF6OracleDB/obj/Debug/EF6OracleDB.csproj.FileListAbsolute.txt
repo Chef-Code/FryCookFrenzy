@@ -56,3 +56,10 @@ D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\Antlr3.Runtime.pdb
 D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\Newtonsoft.Json.xml
 D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\obj\Debug\EF6OracleDB.dll
 D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\obj\Debug\EF6OracleDB.pdb
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\obj\Debug\EF6OracleDB.csprojResolveAssemblyReference.cache
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\System.Net.Http.Formatting.dll
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\System.Web.Http.dll
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\System.Web.Http.WebHost.dll
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\System.Net.Http.Formatting.xml
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\System.Web.Http.xml
+D:\Visual_Studio\Personal\EF6OracleDB\EF6OracleDB\bin\System.Web.Http.WebHost.xml

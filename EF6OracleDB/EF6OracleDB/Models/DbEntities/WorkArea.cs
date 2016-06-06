@@ -6,7 +6,6 @@ using System.Web;
 
 namespace EF6OracleDB.Models.DbEntities
 {
-    [Table("WorkArea")]
     public class WorkArea
     {
         public int WorkAreaID { get; set; }

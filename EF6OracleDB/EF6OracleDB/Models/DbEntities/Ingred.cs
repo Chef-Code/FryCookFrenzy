@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6OracleDB.Models.DbEntities
 {
-    [Table("Ingred")]
     public class Ingred
     {
         public int IngredID { get; set; }

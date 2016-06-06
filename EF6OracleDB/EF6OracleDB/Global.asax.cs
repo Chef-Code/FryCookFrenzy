@@ -14,11 +14,12 @@ namespace EF6OracleDB
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new DbInitializer());
+            Database.SetInitializer(new DbInitializer());               //Each of these have service information
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
     }
 }

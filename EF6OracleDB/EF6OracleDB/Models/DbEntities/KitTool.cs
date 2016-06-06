@@ -2,7 +2,6 @@
 
 namespace EF6OracleDB.Models.DbEntities
 {
-    [Table("KitTool")]
     public class KitTool
     {
         public int KitToolID { get; set; }

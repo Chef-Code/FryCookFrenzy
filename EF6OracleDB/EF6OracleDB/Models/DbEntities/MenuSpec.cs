@@ -8,6 +8,7 @@ namespace EF6OracleDB.Models.DbEntities
     public class MenuSpec
     {
         public int MenuSpecID { get; set; }
+        public int TblCustChairID { get; set; }
         public int MenuItemID { get; set; }
         public string Additions { get; set; }
         public string Subtractions { get; set; }

@@ -7,7 +7,6 @@ using System.Web;
 
 namespace EF6OracleDB.Models.DbEntities
 {
-    [Table("CookStat")]
     public class CookStat
     {
         public int CookStatID { get; set; }
