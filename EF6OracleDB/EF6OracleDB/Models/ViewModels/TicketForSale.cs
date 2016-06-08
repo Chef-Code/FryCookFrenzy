@@ -12,12 +12,13 @@ namespace EF6OracleDB.Models.ViewModels
     public class TicketForSale
     {
         OracleDbContext ctx;
-        public TicketForSale() { }
+        public TicketForSale() { ctx = new OracleDbContext(); }
         public TicketForSale(Ticket ticket, PreparedMeal preparedMeal)
         {
-            ctx = new OracleDbContext();
+
             MenuSpecs = new HashSet<MenuSpec>();
             KitResults = new HashSet<KitResult>();
+            MustFix = MustFix ?? new HashSet<FixMessage>();
             this.TicketID = ticket.TicketID;
 
             if (this.Submitted != null)
@@ -85,7 +86,20 @@ namespace EF6OracleDB.Models.ViewModels
                 }
 
                 return fixs;
-            }          
+            }
+            set
+            {
+                foreach (KitResult kr in KitResults)
+                {
+                    foreach (MenuSpec ms in MenuSpecs)
+                    {
+                        var fix = new FixMessage(kr, ms);
+                        value.Add(fix);
+                    }
+                }
+
+               
+            }        
         }
     }
 }

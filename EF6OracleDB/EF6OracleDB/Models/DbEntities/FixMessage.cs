@@ -9,71 +9,73 @@ namespace EF6OracleDB.Models.DbEntities
 {
     public class FixMessage
     {
-        [NotMapped]
         OracleDbContext ctx;
+        public FixMessage() { ctx = ctx ?? new OracleDbContext(); }
         public FixMessage(KitResult kr, MenuSpec ms)
         {
-            ctx = ctx ?? new OracleDbContext();
 
-            if(kr != null)
+            using (var db = new OracleDbContext())
             {
-                if (kr.Additions == ms.Additions)
-                    Additions = true;
-                else
-                    Additions = false;
 
-                if (kr.Subtractions == ms.Subtractions)
-                    Subtractions = true;
-                else
-                    Subtractions = false;
-
-                if (kr.MenuItemID == ms.MenuItemID)
-                    MenuItem = true;
-                else
-                    MenuItem = false;
-
-                if (kr.CookStatID == ms.CookStatID)
-                    CookStat = true;
-                else
-                    CookStat = false;
-
-                if (!Additions)
+                if (kr != null)
                 {
-                    WrongAdd = String.Format("{0} is the wrong addition for {1}", kr.Additions, this.MenuSpecID);
+                    if (kr.Additions == ms.Additions)
+                        Additions = true;
+                    else
+                        Additions = false;
+
+                    if (kr.Subtractions == ms.Subtractions)
+                        Subtractions = true;
+                    else
+                        Subtractions = false;
+
+                    if (kr.MenuItemID == ms.MenuItemID)
+                        MenuItem = true;
+                    else
+                        MenuItem = false;
+
+                    if (kr.CookStatID == ms.CookStatID)
+                        CookStat = true;
+                    else
+                        CookStat = false;
+
+                    if (!Additions)
+                    {
+                        WrongAdd = String.Format("{0} is the wrong addition for {1}", kr.Additions, this.MenuSpecID);
+                    }
+                    else
+                        WrongAdd = "N/A";
+                    if (!Subtractions)
+                    {
+                        WrongSub = String.Format("{0} is the wrong subtraction for {1}", kr.Subtractions, this.MenuSpecID);
+                    }
+                    else
+                        WrongSub = "N/A";
+                    if (!MenuItem)
+                    {
+                        var menuItem = db.MenuItems.FirstOrDefault(mi => mi.MenuItemID == kr.MenuItemID);
+                        WrongItem = String.Format("{0} is the wrong menu item for {1}", menuItem.MenuItemName, this.MenuSpecID);
+                    }
+                    else
+                        WrongItem = "N/A";
+                    if (!CookStat)
+                    {
+                        var cookStat = ctx.CookStats.FirstOrDefault(cs => cs.CookStatID == kr.CookStatID);
+                        WrongCookStat = String.Format("{0} is the wrong cooking station for {1}", cookStat.CookStatName, this.MenuSpecID);
+                    }
+                    else
+                        WrongCookStat = "N/A";
+
+                    if (Additions && Subtractions && MenuItem && CookStat)
+                    {
+                        AllCorrect = true;
+                    }
                 }
-                else
-                    WrongAdd = "N/A";
-                if (!Subtractions)
+                if (kr == null)
                 {
-                    WrongSub = String.Format("{0} is the wrong subtraction for {1}", kr.Subtractions, this.MenuSpecID);
-                }
-                else
-                    WrongSub = "N/A";
-                if (!MenuItem)
-                {
-                    var menuItem = ctx.MenuItems.Find(kr.MenuItemID);
-                    WrongItem = String.Format("{0} is the wrong menu item for {1}", menuItem.MenuItemName, this.MenuSpecID);
-                }
-                else
-                    WrongItem = "N/A";
-                if (!CookStat)
-                {
-                    var cookStat = ctx.CookStats.Find(kr.CookStatID);
-                    WrongCookStat = String.Format("{0} is the wrong cooking station for {1}", cookStat.CookStatName, this.MenuSpecID);
-                }
-                else
-                    WrongCookStat = "N/A";
-
-                if (Additions && Subtractions && MenuItem && CookStat)
-                {
-                    AllCorrect = true;
+                    WrongAdd = WrongCookStat = WrongItem = WrongSub = "How can I tell you what is wrong with it? You haven't submitted anything.";
                 }
             }
-            if(kr == null)
-            {
-                WrongAdd = WrongCookStat = WrongItem = WrongSub = "How can I tell you what is wrong with it? You haven't submitted anything.";
-            }
-           
 
         }
         public int FixMessageID { get; set; }
@@ -89,10 +91,5 @@ namespace EF6OracleDB.Models.DbEntities
         public string WrongCookStat { get; set; }
         public string WrongItem { get; set; }
         public string WrongSub { get; set; }
-
-
-
-
-
     }
 }

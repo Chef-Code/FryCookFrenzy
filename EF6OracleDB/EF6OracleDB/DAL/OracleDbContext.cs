@@ -18,11 +18,9 @@ namespace EF6OracleDB.DAL
 {
     public class OracleDbContext : DbContext
     {
-        public OracleDbContext() { }
-
-        public OracleDbContext(string connectionString) //: base("EF6OracleDBOracleDbContext")
+        public OracleDbContext() //: base("OracleDbContext")
         {
-            connectionString = "DATA SOURCE = FryCookFrenzy; PERSIST SECURITY INFO = True; USER ID = LONNIE";
+           // connectionString = "DATA SOURCE = FryCookFrenzy; PERSIST SECURITY INFO = True; USER ID = LONNIE";
         }
         public DbSet<Chair> Chairs { get; set; }
         public DbSet<CookStat> CookStats  { get; set; }
