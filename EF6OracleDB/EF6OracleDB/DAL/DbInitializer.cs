@@ -2,6 +2,7 @@
 using EF6OracleDB.Models.ComplexTypes;
 using EF6OracleDB.Models.DbEntities;
 using EF6OracleDB.Models.Enums;
+using EF6OracleDB.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -363,47 +364,51 @@ namespace EF6OracleDB.DAL
 
             var tables = new List<DTbl>()
             {
-                new DTbl { ChairCount = 4, FloorLocation = "North-East Corner" },
-                new DTbl { ChairCount = 4, FloorLocation = "North-West Corner" },
-                new DTbl { ChairCount = 4, FloorLocation = "South-East Corner" },
-                new DTbl { ChairCount = 4, FloorLocation = "North-West Corner" },
-                new DTbl { ChairCount = 2, FloorLocation = "North Wall" },
-                new DTbl { ChairCount = 2, FloorLocation = "South Wall" },
-                new DTbl { ChairCount = 2, FloorLocation = "East Wall" },
-                new DTbl { ChairCount = 2, FloorLocation = "West Wall" },
-                new DTbl { ChairCount = 8, FloorLocation = "Center" }       //TODO: this need to be re-thought-out
+                new DTbl { ChairCount = 4, FloorLocation = "North-East Corner", DTblID = 1 },
+                new DTbl { ChairCount = 4, FloorLocation = "North-West Corner", DTblID = 2 },
+                new DTbl { ChairCount = 4, FloorLocation = "South-East Corner", DTblID = 3 },
+                new DTbl { ChairCount = 4, FloorLocation = "North-West Corner", DTblID = 4 },
+                new DTbl { ChairCount = 2, FloorLocation = "North Wall", DTblID = 5 },
+                new DTbl { ChairCount = 2, FloorLocation = "South Wall", DTblID = 6 },
+                new DTbl { ChairCount = 2, FloorLocation = "East Wall", DTblID = 7 },
+                new DTbl { ChairCount = 2, FloorLocation = "West Wall", DTblID = 8 },
+                new DTbl { ChairCount = 8, FloorLocation = "Center", DTblID = 9 }       //TODO: this need to be re-thought-out
             };
             context.DTbls.AddRange(tables);
 
-            foreach(var t in tables)
+            var chairs = new List<Chair>();
+            var dTblChairs = new List<DTblChair>();
+            int chairIndex = 1;
+            for(var t = 0;t < tables.Count;t++)
             {
-                for(var i = 1;i <= t.ChairCount; i++)
+                for(var i = 1;i <= tables[t].ChairCount; i++)
                 {
-                    var chair = new Chair();
-                    context.Chairs.Add(chair);
+                    //chairIndex = 1;
+                    var chair = new Chair {  ChairID = chairIndex};
+                    chairs.Add(chair);
 
-                    var dTblChair = new DTblChair { DTblID = t.DTblID, ChairID = chair.ChairID };
-                    context.DTblChairs.Add(dTblChair);
+                    var dTblChair = new DTblChair { DTblID = tables[t].DTblID, ChairID = chair.ChairID };
+                    dTblChairs.Add(dTblChair);
+                    chairIndex++;
                 }
             }
-            
+            context.Chairs.AddRange(chairs);
+            context.DTblChairs.AddRange(dTblChairs);
 
             var tableCustomerChairs = new List<TblCustChair>()
             {
-                new TblCustChair { DTblID = context.DTblChairs.ElementAt(0).DTblID,
-                    ChairID = context.DTblChairs.ElementAt(0).ChairID, CustID = customers[0].CustID,
+                new TblCustChair { DTblID = dTblChairs[0].DTblID,
+                    ChairID = dTblChairs[0].ChairID, CustID = customers[0].CustID,
                     Seated = new DateTime(2016,1,1,12,30,0)},
 
-                new TblCustChair { DTblID = context.DTblChairs.ElementAt(1).DTblID,
-                    ChairID = context.DTblChairs.ElementAt(1).ChairID, CustID = customers[1].CustID,
+                new TblCustChair { DTblID = dTblChairs[1].DTblID,
+                    ChairID = dTblChairs[1].ChairID, CustID = customers[1].CustID,
                     Seated = new DateTime(2016,1,1,12,30,0)},
 
-                new TblCustChair { DTblID = context.DTblChairs.ElementAt(2).DTblID,
-                    ChairID = context.DTblChairs.ElementAt(2).ChairID, CustID = customers[2].CustID,
-                    Seated = new DateTime(2016,1,1,12,30,0)}
+                new TblCustChair { DTblID = dTblChairs[2].DTblID,
+                    ChairID = dTblChairs[2].ChairID, CustID = customers[2].CustID,
+                    Seated = new DateTime(2016,1,1,12,30,0) }
             };
-
-            context.TblCustChairs.AddRange(tableCustomerChairs);
 
             var menuSpecs = new List<MenuSpec>()
             {
@@ -422,9 +427,92 @@ namespace EF6OracleDB.DAL
 
             var tickets = new List<Ticket>()
             {
-                new Ticket { DTblID = context.DTblChairs.ElementAt(0).DTblID, EmpID = emps[6].EmpID, }
+                new Ticket { EmpID = emps[6].EmpID, DTblID = dTblChairs[0].DTblID,
+                    TimeSubmitted = new DateTime(2016,1,1,12,36,0), TicketID = 1
+                }
+            };
+            context.Tickets.AddRange(tickets);
+
+            for (var i = 0; i <= tables.Count; i++)                                         //dates need to be handled differently, made dynamic
+            {
+                foreach (var tcc in tableCustomerChairs.Where(table => table.DTblID == i && table.Seated == new DateTime(2016, 1, 1, 12, 30, 0))) //each tableCustomerChair at a specific table "i"
+                {
+                    foreach (var ms in menuSpecs.Where(m => m.TblCustChairID == tcc.TblCustChairID))
+                    {
+                        tcc.MenuSpecs.Add(ms); //add menuSpecification to the tableChairCustomer
+
+                        foreach(var ticket in tickets.Where(t => t.DTblID == tcc.DTblID))
+                        {
+                            ticket.MenuSpecs.Add(ms); //add all menuSpecifications to a ticket belonging to the same table
+                        }
+                    }
+                }
             }
-         
+            context.MenuSpecs.AddRange(menuSpecs);
+            context.TblCustChairs.AddRange(tableCustomerChairs);
+            context.Tickets.AddRange(tickets);
+
+            var kitResults1 = new List<KitResult>()
+            {
+               new KitResult { Additions = "Tobasco", Subtractions = "Biscuit", MenuItemID = menuItems[0].MenuItemID, CookStatID = cookStats[3].CookStatID },
+               new KitResult { Additions = "Tobasco", Subtractions = "Biscuit", MenuItemID = menuItems[0].MenuItemID, CookStatID = cookStats[3].CookStatID },
+               new KitResult { Additions = "Tobasco", Subtractions = "Biscuit", MenuItemID = menuItems[1].MenuItemID, CookStatID = cookStats[1].CookStatID },
+               new KitResult { Additions = "Tobasco", Subtractions = "Biscuit", MenuItemID = menuItems[0].MenuItemID, CookStatID = cookStats[3].CookStatID },
+            };
+
+            var kitResults2 = new List<KitResult>()
+            {
+                new KitResult {  MenuItemID = menuItems[0].MenuItemID, CookStatID = cookStats[2].CookStatID, Additions = "Tabasco", Subtractions = "" },
+
+                new KitResult {  MenuItemID = menuItems[0].MenuItemID, CookStatID = cookStats[2].CookStatID, Additions = "catsup", Subtractions = "" },
+
+                new KitResult {  MenuItemID = menuItems[1].MenuItemID, CookStatID = cookStats[3].CookStatID, Additions = "Extra Hollandaise", Subtractions = "Burnt" },
+
+                 new KitResult {  MenuItemID = menuItems[1].MenuItemID, CookStatID = cookStats[3].CookStatID, Additions = "Extra Hollandaise", Subtractions = "Burnt" },
+            };
+
+            var preparedMeals = new List<PreparedMeal>()
+            {
+                new PreparedMeal {TicketID = tickets[0].TicketID },
+                new PreparedMeal {TicketID = tickets[0].TicketID }
+            };
+
+            foreach(var kr in kitResults1)
+            {
+                preparedMeals[0].KitResults.Add(kr);
+            }
+
+            context.PreparedMeals.AddRange(preparedMeals);
+
+            var ticket1 = new TicketForSale(tickets[0], preparedMeals[0]) { Submitted = tickets[0].TimeSubmitted, SoldByKitchen = true, };
+
+            //{ TicketID = tickets[0].TicketID, Submitted = tickets[0].TimeSubmitted, KitResults = firstAttempt[0].KitResults, SoldByKitchen = true, };
+
+            var fixMessages = new List<FixMessage>();
+            foreach(var fix in ticket1.MustFix)
+            {
+                fixMessages.Add(fix);
+            }
+
+            context.FixMessages.AddRange(fixMessages);
+
+            foreach(var kr in kitResults2)
+            {
+                preparedMeals[1].KitResults.Add(kr);
+            }
+
+            var ticket2 = new TicketForSale(tickets[0],preparedMeals[1]) { Submitted = tickets[0].TimeSubmitted, SoldByKitchen = true, };
+
+            foreach (var fix in ticket2.MustFix)
+            {
+                fixMessages.Add(fix);
+            }
+            context.FixMessages.AddRange(fixMessages);
+
+
+
+            context.TicketForSales.Add(ticket1);
+            context.TicketForSales.Add(ticket2);
             context.SaveChanges();
 
             base.Seed(context);

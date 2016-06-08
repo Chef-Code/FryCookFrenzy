@@ -194,11 +194,15 @@
     <Compile Include="Models\DbEntities\CookStatTool.cs" />
     <Compile Include="Models\DbEntities\DTblChair.cs" />
     <Compile Include="Models\DbEntities\Emp.cs" />
+    <Compile Include="Models\DbEntities\FixMessage.cs" />
     <Compile Include="Models\DbEntities\JobTitle.cs" />
+    <Compile Include="Models\DbEntities\KitResult.cs" />
     <Compile Include="Models\DbEntities\KitTool.cs" />
+    <Compile Include="Models\DbEntities\PreparedMeal.cs" />
     <Compile Include="Models\DbEntities\Recipe.cs" />
     <Compile Include="Models\DbEntities\Refrig.cs" />
     <Compile Include="Models\DbEntities\RefrigIngred.cs" />
+    <Compile Include="Models\ViewModels\TicketForSale.cs" />
     <Compile Include="Models\DbEntities\WorkArea.cs" />
     <Compile Include="Models\DbEntities\WorkAreaIngred.cs" />
     <Compile Include="Models\DbEntities\WorkAreaKT.cs" />

@@ -7,7 +7,7 @@ namespace EF6OracleDB.Models.DbEntities
 {
     public class DTblChair
     {
-        public int DTbleChairID { get; set; }
+        public int DTblChairID { get; set; }
         public int DTblID { get; set; }
         public int ChairID { get; set; }
     }

@@ -13,6 +13,7 @@ namespace EF6OracleDB.Models.DbEntities
             TbleCustChairs = TbleCustChairs ?? new HashSet<TblCustChair>();
         }
         public int TicketID { get; set; }
+        public int DTblID { get; set; }
         public DateTime TimeSubmitted { get; set; }
         public int EmpID { get; set; }
         public virtual ICollection<TblCustChair> TbleCustChairs { get; set; }
